@@ -1,0 +1,122 @@
+
+// In this use case, the payment method that is available is only cash on delivrey. However, in the future this can be integrated with banking corperation such as DBS or Visa for online payment.
+namespace org.onlineshopping.basic
+
+participant Supplier identified by supplierId {
+  o String supplierId
+  o String companyName
+  o String pocName
+  o String pocEmail
+  o Address address
+}
+
+participant ShippingPartner identified by shippingPartnerId {
+  o String shippingPartnerId
+  o String companyName
+  o String pocName
+  o String pocEmail
+}
+
+participant Consumer identified by username {
+  o String username
+  o String email
+  o String consumerName
+  o String mobile
+  o Address address
+}
+
+concept Address{
+ o String house
+ o String street
+ o String county optional
+ o String postcode
+ o String country
+}
+
+asset Goods identified by goodsId { // Supplier Read & Write , Consumer Read
+  o String goodsId
+  --> Supplier supplier
+  o String name
+  o String type
+  o Integer quantity
+  o Double price
+}
+
+asset Shipment identified by shipmentId { // Supplier Read,  ShippingPartner Read & Write, Consumer Read
+ o String shipmentId 
+ --> ShippingPartner shippingPartner
+ --> Supplier supplier
+ --> Order order
+ o Integer size
+ o Double weight
+ o Boolean supplierHandover default = false
+ o Boolean shippingPartnerHandoverEndorsed default = false
+ o Boolean shippingPartnerDelivery default = false
+ o Boolean consumerEndorsed default = false
+
+ o ShipmentState shipmentState optional
+}
+
+
+asset Order identified by orderId { // Supplier, Consumer Read & Write, ShippingPartner Read
+ o String orderId 
+ --> Goods[] goods // either store a array of reference to goods or array of goodsId
+ o Integer[] quantity
+ --> Supplier supplier
+ --> Consumer consumer
+ o Double totalPrice optional
+ o OrderState orderState
+ 
+}
+
+enum ShipmentState{
+  o inTransit
+  o delivered
+  
+}
+enum OrderState {
+ o orderPlaced
+ o successful
+}
+
+transaction ImportGoods {
+  --> Goods good
+  o Integer quantity
+  --> Supplier supplier optional
+}
+
+transaction MakeOrder{
+  o String orderId
+  o Integer[] quantity
+  --> Goods[] goods
+  --> Supplier supplier
+  --> Consumer consumer optional
+  //o Double totalPrice optional
+}
+
+transaction SupplierHandover{
+  o String shipmentId
+  --> ShippingPartner shippingPartner
+  --> Supplier supplier optional
+  --> Order order
+  o Integer size
+  o Double weight
+}
+
+transaction ShippingPartnerEndorseHandover{
+  --> Shipment shipment
+}
+  
+transaction ShippingPartnerDelivery{
+  --> Shipment shipment
+}
+
+transaction ConsumerEndorseDelivery {
+  --> Shipment shipment 
+}
+
+transaction CloseOrder {
+  --> Order order
+  --> Shipment shipment
+}
+

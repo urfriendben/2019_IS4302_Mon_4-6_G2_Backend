@@ -1,0 +1,258 @@
+
+//goodsAsset
+// supplier read & write, Consumer Read
+
+rule SupplierGreateGoods{
+  description: "Allow supplier to create Goods asset"
+  participant(p): "org.onlineshopping.basic.Supplier"
+  operation: ALL
+  resource(r): "org.onlineshopping.basic.Goods"
+  condition: ( p.getIdentifier() === r.supplier.getIdentifier() )
+  action: ALLOW
+}
+
+rule SupplierImportGoods{
+  description: "Allow supplier to import more goods"
+  participant(p): "org.onlineshopping.basic.Supplier"
+  operation: CREATE
+  resource(r): "org.onlineshopping.basic.ImportGoods"
+  condition: (p.getIdentifier() === r.good.supplier.getIdentifier())
+  action: ALLOW
+}
+
+rule SupplierReadShipping{
+ description: "Allow supplier to read shipping partner"
+ participant: "org.onlineshopping.basic.Supplier"
+ operation:READ
+ resource: "org.onlineshopping.basic.ShippingPartner"
+ action: ALLOW 
+}
+
+rule ConsumerReadGoodsAsset{
+ description: "Allow consumer to read Goods asset"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation:READ
+ resource: "org.onlineshopping.basic.Goods"
+ action: ALLOW 
+}
+// order asset supplier read & write,consumer read & write
+
+rule ConsumerReadSupplier{
+ description: "Allow consumer to read Supplier"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation: READ
+ resource: "org.onlineshopping.basic.Supplier"
+ action: ALLOW 
+}
+
+rule ConsumerCallMakeOrder{
+ description: "Allow consumer to call MakeOrder tx"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation:CREATE
+ resource: "org.onlineshopping.basic.MakeOrder"
+ action: ALLOW 
+}
+
+rule ConsumerUpdateGoodsAsset{
+ description: "Allow consumer to update Goods asset through tx"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation: UPDATE
+ resource: "org.onlineshopping.basic.Goods"
+ transaction: "org.onlineshopping.basic.MakeOrder"
+ action: ALLOW 
+}
+
+rule ConsumerCreateOrderAsset{
+ description: "Allow consumer to create Order asset through tx"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation:CREATE
+ resource: "org.onlineshopping.basic.Order"
+ transaction: "org.onlineshopping.basic.MakeOrder"
+ action: ALLOW 
+}
+
+rule ConsumerReadOrderAsset{
+ description: "Allow consumer to read Order asset related to them"
+ participant(p): "org.onlineshopping.basic.Consumer"
+ operation: READ
+ resource(r): "org.onlineshopping.basic.Order"
+ condition: ( p.getIdentifier() === r.consumer.getIdentifier()) 
+ action: ALLOW 
+}
+
+rule ConsumerCloseOrder{
+ description: "Allow consumer to Close Order"
+ participant(p): "org.onlineshopping.basic.Consumer"
+ operation: CREATE
+ resource(r): "org.onlineshopping.basic.CloseOrder"
+ condition:(p.getIdentifier() === r.order.consumer.getIdentifier() || r.consumer.getIdentifier === r.order.consumer.getIdentifier())
+ action: ALLOW 
+}
+
+rule ConsumerUpdateOrderAssetThroughCloseOrder{
+ description: "Allow consumer to update Order asset through tx"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation: UPDATE
+ resource: "org.onlineshopping.basic.Order"
+ transaction: "org.onlineshopping.basic.CloseOrder"
+ action: ALLOW 
+}
+
+rule SupplierReadOrderAsset{
+ description: "Allow supplier to read Order asset related to them"
+ participant(p): "org.onlineshopping.basic.Supplier"
+ operation: READ
+ resource(r): "org.onlineshopping.basic.Order"
+ condition: (p.getIdentifier() === r.supplier.getIdentifier())
+ action: ALLOW 
+}
+
+
+//shipment asset supplier read, shipping partners read & write, consumer read
+
+rule SupplierCallSupplierHandover{
+ description: "Allow supplier to call SupplierHandover tx"
+ participant: "org.onlineshopping.basic.Supplier"
+ operation: CREATE
+ resource: "org.onlineshopping.basic.SupplierHandover"
+ action: ALLOW 
+}
+
+rule SupplierCreateShipmentAsset{
+ description: "Allow supplier to create shipment asset through tx"
+ participant: "org.onlineshopping.basic.Supplier"
+ operation: CREATE
+ resource: "org.onlineshopping.basic.Shipment"
+ transaction: "org.onlineshopping.basic.SupplierHandover"
+ action: ALLOW 
+}
+
+rule SupplierReadShipmentAsset {
+ description: "Allow Supplier to read Shipment asset that are related to them"
+ participant(p): "org.onlineshopping.basic.Supplier"
+ operation:READ
+ resource(r): "org.onlineshopping.basic.Shipment"
+ condition: (p.getIdentifier() === r.supplier.getIdentifier())
+ action: ALLOW 
+}
+
+rule ShippingPartnerReadShipmentAsset{
+ description: "Allow Shipping Partner to read Shipment asset releated to them"
+ participant(p): "org.onlineshopping.basic.ShippingPartner"
+ operation:READ
+ resource(r): "org.onlineshopping.basic.Shipment"
+ condition: (p.getIdentifier() === r.shippingPartner.getIdentifier())
+ action: ALLOW 
+}
+
+rule ShippingPartnerCallEndorseHandover{
+ description: "Allow shipping partner to call ShippingPartnerEndorseHandover tx"
+ participant(p): "org.onlineshopping.basic.ShippingPartner"
+ operation: CREATE
+ resource(r): "org.onlineshopping.basic.ShippingPartnerEndorseHandover"
+ condition: (p.getIdentifier() === r.shipment.shippingPartner.getIdentifier())
+ action: ALLOW 
+}
+
+rule ShippingPartnerCallDelivery{
+ description: "Allow shipping partner to call ShippingPartnerDelivery tx"
+ participant(p): "org.onlineshopping.basic.ShippingPartner"
+ operation: CREATE
+ resource(r): "org.onlineshopping.basic.ShippingPartnerDelivery"
+ condition: (p.getIdentifier() === r.shipment.shippingPartner.getIdentifier())
+ action: ALLOW 
+}
+
+rule ShippingPartnerEndorseUpdateShipmentAsset{
+ description: "Allow shipping partner to update Shipment asset related when they endorse it"
+ participant: "org.onlineshopping.basic.ShippingPartner"
+ operation: UPDATE
+ resource: "org.onlineshopping.basic.Shipment"
+ transaction: "org.onlineshopping.basic.ShippingPartnerEndorseHandover"
+ action: ALLOW 
+}
+
+rule ShippingPartnerDeliverUpdateShipmentAsset{
+ description: "Allow shipping partner to update Shipment asset related when they deliver it"
+ participant: "org.onlineshopping.basic.ShippingPartner"
+ operation: UPDATE
+ resource: "org.onlineshopping.basic.Shipment"
+ transaction: "org.onlineshopping.basic.ShippingPartnerDelivery"
+ action: ALLOW 
+}
+
+rule ConsumerReadShipmentAsset{
+ description: "Allow consumer to read Shipment asset related to them"
+ participant(p): "org.onlineshopping.basic.Consumer"
+ operation: READ
+ resource(r): "org.onlineshopping.basic.Shipment"
+ condition: (p.getIdentifier() === r.order.consumer.getIdentifier())
+ action: ALLOW 
+}
+
+rule ConsumerCallConsumerEndorseDelivery{
+ description: "Allow consumer to call ConsumerEndorseDelivery tx"
+ participant(p): "org.onlineshopping.basic.Consumer"
+ operation: CREATE
+ resource(r): "org.onlineshopping.basic.ConsumerEndorseDelivery"
+ condition: (p.getIdentifier() === r.shipment.order.consumer.getIdentifier())
+ action: ALLOW 
+}
+
+rule ConsumerUpdateShipmentThroughConsumerEndorseDelivery{
+ description: "Allow consumer to update shipping when endorse delivery"
+ participant: "org.onlineshopping.basic.Consumer"
+ operation: UPDATE
+ resource: "org.onlineshopping.basic.Shipment"
+ transaction: "org.onlineshopping.basic.ConsumerEndorseDelivery"
+ action: ALLOW 
+}
+
+/*rule EverybodyCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "org.onlineshopping.basic.*"
+    operation: READ
+    resource: "org.onlineshopping.basic.*"
+    action: ALLOW
+}
+
+rule EverybodyCanSubmitTransactions {
+    description: "Allow all participants to submit transactions"
+    participant: "org.onlineshopping.basic.*"
+    operation: CREATE
+    resource: "org.onlineshopping.basic.*"
+    action: ALLOW
+}
+
+rule OwnerHasFullAccessToTheirAssets {
+    description: "Allow all participants full access to their assets"
+    participant(p): "org.onlineshopping.basic.*"
+    operation: ALL
+    resource(r): "org.onlineshopping.basic.*"
+    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}*/
+
+rule SystemACL {
+    description: "System ACL to permit all access"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
