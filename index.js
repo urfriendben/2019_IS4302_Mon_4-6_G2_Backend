@@ -7,6 +7,11 @@ var bodyParser = require('body-parser');
 let app = express();
 let port = 8010;
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
 var composerEndpoint = 'http://18.220.99.175:3000';
 
@@ -16,20 +21,30 @@ firebase.initializeApp({
 });
 var db = firebase.database();
 
-app.post('/login', function (req, res) {
+app.post('/login', async function (req, res) {
   var ref = db.ref('Account');
-  ref.orderByChild('Username').equalTo(req.body.username).once("value", function(snapshot) {
-    snapshot.forEach(function(snap) {
-      if(snap && snap.child('Password').val() === req.body.password) {
-        console.log('found')
-        res.json({
-          username: snap.child('Username').val(),
-          role: snap.child('Role').val().toUpperCase()
-        });
-      }
-    })
-
+  var snapshot = await ref.once("value");
+  var data = null;
+  snapshot.forEach(function(snap) {
+    if(snap && snap.child('Username').val() === req.body.username && snap.child('Password').val() === req.body.password) {
+      data = {
+        "username": snap.child('Username').val(),
+        "role": snap.child('Role').val().toUpperCase()
+      };
+    }
   });
+  if (data) {
+    res.json({
+      data: data
+    });
+  } else {
+    res.status(500).json({
+      data: {
+        error: 'Unauthorized'
+      }
+    });
+  }
+
 });
 
 app.get('/goods', function (req, res) {
