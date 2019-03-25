@@ -3,6 +3,7 @@ const axios = require('axios');
 var firebase = require('firebase-admin');
 var firebaseCert = require('./firebaseCredential.json');
 var bodyParser = require('body-parser');
+const uuidv1 = require('uuid/v1');
 
 let app = express();
 let port = 8010;
@@ -54,6 +55,55 @@ app.get('/goods', function (req, res) {
     res.json({data: response.data});
   });
 });
+
+app.get('/good/:id', function (req, res) {
+  // Promise to get goods
+  axios.get(composerEndpoint + '/api/Goods/'+ req.params.id)
+  .then(function(response) {
+    res.json({data: response.data});
+  });
+});
+
+app.post('/makeOrder', function(req, res) {
+  var input = req.body.data;
+  Object.keys(input).map(supplierId => {
+    var goods = [];
+    var quantity = [];
+    let goodPrefix = "resource:org.onlineshopping.basic.Goods#";
+    Object.keys(input[supplierId]).map(productId => {
+      goods.push(goodPrefix + productId);
+      quantity.push(input[supplierId][productId].quantity);
+    })
+    axios.post(composerEndpoint + '/api/MakeOrder', {
+      "$class": "org.onlineshopping.basic.MakeOrder",
+      "orderId": uuidv1(),
+      "quantity": quantity,
+      "goods": goods,
+      "supplier": supplierId, 
+    }).then(function(response) {
+    res.send('Successfully posted the makeOrder!');
+    }).catch((error) => errorHandling(error));
+  });
+})
+
+function errorHandling(error){
+ if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+}
 
 app.post('/good', function (req, res) {
   axios.post(composerEndpoint + '/api/CreateGoods',
