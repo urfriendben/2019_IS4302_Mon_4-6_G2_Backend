@@ -121,6 +121,80 @@ app.post('/makeOrder', function(req, res) {
   });
 })
 
+//Start
+
+//Start for ShippingPartnerEndorseHandover
+app.post('/ShippingPartnerEndorseHandover', function(req,res) {
+	
+  var input = req.body.data;
+
+  axios.post(composerEndpoint + '/api/ShippingPartnerEndorseHandover',
+	{
+
+		"$class": "org.onlineshopping.basic.ShippingPartnerEndorseHandover",
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+})
+  .then(function(response) {
+    res.send('Shipment handover is endorsed by shipping partner.');
+  }).catch((error) => errorHandling(error));
+})
+
+//Start for ShippingPartnerDelivery
+app.post('/ShippingPartnerDelivery', function(req,res) {
+  
+  var input = req.body.data;
+
+  axios.post(composerEndpoint + '/api/ShippingPartnerDelivery',
+  {
+
+    "$class": "org.onlineshopping.basic.ShippingPartnerDelivery",
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+})
+  .then(function(response) {
+    res.send('Shipment delivery is endorsed by shipping partner.');
+  }).catch((error) => errorHandling(error));
+})
+
+// Start for ConsumerEndorseDelivery
+
+app.post('/ConsumerEndorseDelivery', function(req,res) {
+  
+  var input = req.body.data;
+
+  axios.post(composerEndpoint + '/api/ConsumerEndorseDelivery',
+  {
+
+    "$class": "org.onlineshopping.basic.ConsumerEndorseDelivery",
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+})
+  .then(function(response) {
+    res.send('Shipment delivery is endorsed by consumer.');
+  }).catch((error) => errorHandling(error));
+})
+
+
+// Start for SupplierHandover
+
+app.post('/SupplierHandover', function(req,res) {
+  
+  var input = req.body.data;
+
+  axios.post(composerEndpoint + '/api/SupplierHandover',
+  {
+     "$class": "org.onlineshopping.basic.SupplierHandover",
+     "shipmentId": input[shipmentId],
+     "shippingPartner": "resource:org.onlineshopping.basic.ShippingPartner#" + input[shippingPartnerId],
+     "order": "resource:org.onlineshopping.basic.Order#" + input[orderId],
+     "size": input[size],
+     "weight": input[weight]
+  .then(function(response) {
+    res.send('Supplier handover order to shipping partner.');
+  }).catch((error) => errorHandling(error));
+})
+
+//End
+
+
 function errorHandling(error){
  if (error.response) {
         // The request was made and the server responded with a status code
