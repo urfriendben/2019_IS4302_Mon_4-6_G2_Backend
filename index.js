@@ -53,7 +53,42 @@ app.get('/goods', function (req, res) {
   axios.get(composerEndpoint + '/api/Goods')
   .then(function(response) {
     res.json({data: response.data});
-  });
+  }).catch((error) => errorHandling(error));
+});
+
+app.get('/order/:id', function (req, res) {
+  // Promise to get goods
+  var goodsData = [];
+  axios.get(composerEndpoint + '/api/Order/'+ req.params.id)
+  .then(function(response) {
+    var goods = response.data.goods;
+    var orderInfo = response.data;
+    res.json({
+      orderInfo: orderInfo,
+      // goods: goodsData,
+    })
+    // goods.map(goodId => {
+    //   axios.get(composerEndpoint + '/api/Goods/'+ goodId.split("#")[1]).then(function(r){
+    //     goodsData.push({
+    //       goodsId: r.data.goodsId, 
+    //       name: r.data.name,
+    //       type: r.data.type,
+    //       price: r.data.price
+    //     });
+    //   })
+    // }).catch((error) => errorHandling(error));
+    // res.json({data: response.data});
+  }).catch((error) => errorHandling(error));
+
+        
+});
+
+app.get('/orders', function (req, res) {
+  // Promise to get goods
+  axios.get(composerEndpoint + '/api/Order')
+  .then(function(response) {
+    res.json({data: response.data});
+  }).catch((error) => errorHandling(error));
 });
 
 app.get('/good/:id', function (req, res) {
@@ -81,7 +116,7 @@ app.post('/makeOrder', function(req, res) {
       "goods": goods,
       "supplier": supplierId, 
     }).then(function(response) {
-    res.send('Successfully posted the makeOrder!');
+       res.send('Successfully posted the makeOrder!');
     }).catch((error) => errorHandling(error));
   });
 })
@@ -118,5 +153,5 @@ app.post('/good', function (req, res) {
   })
   .then(function(response) {
     res.send('')
-  });
+  }).catch((error) => errorHandling(error));
 });
