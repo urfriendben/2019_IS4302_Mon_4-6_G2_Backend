@@ -214,18 +214,46 @@ function errorHandling(error){
       console.log(error.config);
 }
 
-app.post('/good', function (req, res) {
-  axios.post(composerEndpoint + '/api/CreateGoods',
+//app.post('/good', function (req, res) {
+  //axios.post(composerEndpoint + '/api/CreateGoods',
+  //{
+    //"$class": "org.onlineshopping.basic.CreateGoods",
+    //"goodsId": "2",
+    //"supplier": "resource:org.onlineshopping.basic.Supplier#1",
+    //"name": "iPhone SE",
+    //"type": "Electronic",
+    //"quantity": 100,
+    //"price": 600
+  //})
+  //.then(function(response) {
+    //res.send('')
+  //}).catch((error) => errorHandling(error));
+//});
+	
+//
+app.post('/importGoods',function(req,res){
+  var input = req.body.data;
+  axios.post(composerEndpoint + '/api/ImportGoods',
   {
-    "$class": "org.onlineshopping.basic.CreateGoods",
-    "goodsId": "2",
-    "supplier": "resource:org.onlineshopping.basic.Supplier#1",
-    "name": "iPhone SE",
-    "type": "Electronic",
-    "quantity": 100,
-    "price": 600
+    "$class": "org.onlineshopping.basic.ImportGoods",
+    "good": "resource:org.onlineshopping.basic.Goods#" + input[goodsId],
+    "quantity": input[quantity]
+    //"supplier": {}
   })
   .then(function(response) {
     res.send('')
   }).catch((error) => errorHandling(error));
-});
+})
+
+app.post('/closeOrder',function(req,res){
+  var input = req.body.data;
+  axios.post(composerEndpoint + '/api/CloseOrder',{
+    "$class": "org.onlineshopping.basic.CloseOrder",
+    "order": "resource:org.onlineshopping.basic.Order#" + input[orderId],
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+  })
+  .then(function(response) {
+    res.send('')
+  }).catch((error) => errorHandling(error));
+})
+//
