@@ -201,11 +201,11 @@ app.post('/SupplierHandover', function(req,res) {
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/SupplierHandover',
   {
      "$class": "org.onlineshopping.basic.SupplierHandover",
-     "shipmentId": input[shipmentId],
-     "shippingPartner": "resource:org.onlineshopping.basic.ShippingPartner#" + input[shippingPartnerId],
-     "order": "resource:org.onlineshopping.basic.Order#" + input[orderId],
-     "size": input[size],
-     "weight": input[weight]
+     "shipmentId": input['shipmentId'],
+     "shippingPartner": "resource:org.onlineshopping.basic.ShippingPartner#" + input['shippingPartnerId'],
+     "order": "resource:org.onlineshopping.basic.Order#" + input['orderId'],
+     "size": input['size'],
+     "weight": input['weight']
   })
   .then(function(response) {
     res.send('Supplier handover order to shipping partner.');
