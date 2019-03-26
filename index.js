@@ -101,7 +101,7 @@ app.get('/good/:id', function (req, res) {
 });
 
 app.post('/makeOrder', function(req, res) {
-  var input = req.body.data;
+  var input = req.body;
   Object.keys(input).map(supplierId => {
     var goods = [];
     var quantity = [];
@@ -145,13 +145,13 @@ app.get('/shipment/:id', function (req, res) {
 //Start for ShippingPartnerEndorseHandover
 app.post('/ShippingPartnerEndorseHandover', function(req,res) {
   
-  var input = req.body.data;
+  var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ShippingPartnerEndorseHandover',
   {
 
     "$class": "org.onlineshopping.basic.ShippingPartnerEndorseHandover",
-    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input['shipmentId']
 })
   .then(function(response) {
     res.send('Shipment handover is endorsed by shipping partner.');
@@ -161,13 +161,13 @@ app.post('/ShippingPartnerEndorseHandover', function(req,res) {
 //Start for ShippingPartnerDelivery
 app.post('/ShippingPartnerDelivery', function(req,res) {
   
-  var input = req.body.data;
+  var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ShippingPartnerDelivery',
   {
 
     "$class": "org.onlineshopping.basic.ShippingPartnerDelivery",
-    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input['shipmentId']
 })
   .then(function(response) {
     res.send('Shipment delivery is endorsed by shipping partner.');
@@ -178,13 +178,13 @@ app.post('/ShippingPartnerDelivery', function(req,res) {
 
 app.post('/ConsumerEndorseDelivery', function(req,res) {
   
-  var input = req.body.data;
+  var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ConsumerEndorseDelivery',
   {
 
     "$class": "org.onlineshopping.basic.ConsumerEndorseDelivery",
-    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input['shipmentId']
 })
   .then(function(response) {
     res.send('Shipment delivery is endorsed by consumer.');
@@ -196,7 +196,7 @@ app.post('/ConsumerEndorseDelivery', function(req,res) {
 
 app.post('/SupplierHandover', function(req,res) {
   
-  var input = req.body.data;
+  var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/SupplierHandover',
   {
@@ -252,12 +252,12 @@ function errorHandling(error){
   
 //
 app.post('/importGoods',function(req,res){
-  var input = req.body.data;
+  var input = req.body;
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ImportGoods',
   {
     "$class": "org.onlineshopping.basic.ImportGoods",
-    "good": "resource:org.onlineshopping.basic.Goods#" + input[goodsId],
-    "quantity": input[quantity]
+    "good": "resource:org.onlineshopping.basic.Goods#" + input['goodsId'],
+    "quantity": input['quantity']
     //"supplier": {}
   })
   .then(function(response) {
@@ -266,11 +266,11 @@ app.post('/importGoods',function(req,res){
 })
 
 app.post('/closeOrder',function(req,res){
-  var input = req.body.data;
+  var input = req.body;
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/CloseOrder',{
     "$class": "org.onlineshopping.basic.CloseOrder",
-    "order": "resource:org.onlineshopping.basic.Order#" + input[orderId],
-    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input[shipmentId]
+    "order": "resource:org.onlineshopping.basic.Order#" + input['orderId'],
+    "shipment": "resource:org.onlineshopping.basic.Shipment#" + input['shipmentId']
   })
   .then(function(response) {
     res.send('')
