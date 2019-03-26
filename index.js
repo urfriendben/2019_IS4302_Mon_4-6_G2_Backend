@@ -126,6 +126,13 @@ app.post('/makeOrder', function(req, res) {
 
 //Start for get shipment
 
+app.get('/shipments', function (req, res) {
+  axios.get(composerEndpoint + ':' + req.headers.port + '/api/Shipment')
+  .then(function(response) {
+    res.json({data: response.data});
+  }).catch((error) => errorHandling(error));
+});
+
 app.get('/shipment/:id', function (req, res) {
   // Promise to get goods
   axios.get(composerEndpoint + ':' + req.headers.port + '/api/Shipment/' + req.params.id)
