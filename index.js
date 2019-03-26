@@ -30,7 +30,8 @@ app.post('/login', async function (req, res) {
     if(snap && snap.child('Username').val() === req.body.username && snap.child('Password').val() === req.body.password) {
       data = {
         "username": snap.child('Username').val(),
-        "role": snap.child('Role').val().toUpperCase()
+        "role": snap.child('Role').val().toUpperCase(),
+        "port": snap.child('Port').val()
       };
     }
   });
