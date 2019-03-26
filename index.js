@@ -273,6 +273,3 @@ app.post('/closeOrder',function(req,res){
     res.send('')
   }).catch((error) => errorHandling(error));
 })
-
-async function test(){
-
