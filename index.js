@@ -57,31 +57,34 @@ app.get('/goods', function (req, res) {
   }).catch((error) => errorHandling(error));
 });
 
-app.get('/order/:id', function (req, res) {
+app.post('/order/:id', function (req, res) {
   // Promise to get goods
-  var goodsData = [];
-  axios.get(composerEndpoint + ':' + req.headers.port + '/api/Order/'+ req.params.id)
-  .then(function(response) {
-    var goods = response.data.goods;
-    var orderInfo = response.data;
-    res.json({
-      orderInfo: orderInfo,
-      // goods: goodsData,
-    })
-    // goods.map(goodId => {
-    //   axios.get(composerEndpoint + '/api/Goods/'+ goodId.split("#")[1]).then(function(r){
-    //     goodsData.push({
-    //       goodsId: r.data.goodsId, 
-    //       name: r.data.name,
-    //       type: r.data.type,
-    //       price: r.data.price
-    //     });
-    //   })
-    // }).catch((error) => errorHandling(error));
-    // res.json({data: response.data});
-  }).catch((error) => errorHandling(error));
-
-        
+  axios.all([
+      axios.post(composerEndpoint + '/api/ViewOrder',
+      {
+    "$class": "org.onlineshopping.basic.ViewOrder",
+    "order": "resource:org.onlineshopping.basic.Order#" + req.params.id
+      }),
+      axios.get(composerEndpoint + '/api/Order/' + req.params.id)
+]).then(axios.spread(function (response, response2) {
+    // res.send("check");
+    console.log(response.data)
+    console.log(response2.data)
+    var data = response.data;
+    var data2 = response2.data;
+    res.send({
+          orderInfo: {
+            orderId: data2.orderId,
+            orderState: data2.orderState,
+            totalPrice: data2.totalPrice
+          },
+          goodsId: data.goodsId,
+          goodsName: data.goodsName,
+          price: data.price,
+          type: data.type,
+          quantity: data.quantity
+        });
+  })).catch((error) => errorHandling(error));     
 });
 
 app.get('/orders', function (req, res) {
@@ -217,18 +220,12 @@ app.post('/SupplierHandover', function(req,res) {
 
 function errorHandling(error){
  if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
         console.log(error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);
       }
       console.log(error.config);
