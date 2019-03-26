@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
-var composerEndpoint = 'http://18.220.99.175:3000';
+var composerEndpoint = 'http://18.220.99.175';
 
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseCert),
@@ -50,7 +50,7 @@ app.post('/login', async function (req, res) {
 
 app.get('/goods', function (req, res) {
   // Promise to get goods
-  axios.get(composerEndpoint + '/api/Goods')
+  axios.get(composerEndpoint + ':' + req.headers.port + '/api/Goods') //NOTE: e.g. port 3000 in postman
   .then(function(response) {
     res.json({data: response.data});
   }).catch((error) => errorHandling(error));
@@ -187,6 +187,7 @@ app.post('/SupplierHandover', function(req,res) {
      "order": "resource:org.onlineshopping.basic.Order#" + input[orderId],
      "size": input[size],
      "weight": input[weight]
+  })
   .then(function(response) {
     res.send('Supplier handover order to shipping partner.');
   }).catch((error) => errorHandling(error));
