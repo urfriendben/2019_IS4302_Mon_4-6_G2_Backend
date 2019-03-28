@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
-var composerEndpoint = 'http://18.218.17.175';
+var composerEndpoint = 'http://52.15.98.17';
 
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseCert),
