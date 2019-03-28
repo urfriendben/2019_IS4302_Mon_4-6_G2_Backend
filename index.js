@@ -70,8 +70,8 @@ app.get('/order/:id', function (req, res) {
       axios.get(composerEndpoint + ':' + req.headers.port + '/api/Order/' + req.params.id)
 ]).then(axios.spread(function (response, response2) {
     // res.send("check");
-    
-    
+
+
     var data = response.data;
     var data2 = response2.data;
     res.send({
@@ -86,7 +86,7 @@ app.get('/order/:id', function (req, res) {
           type: data.type,
           quantity: data.quantity
         });
-  })).catch((error) => errorHandling(error));     
+  })).catch((error) => errorHandling(error));
 });
 
 app.get('/orders', function (req, res) {
@@ -120,7 +120,7 @@ app.post('/makeOrder', function(req, res) {
       "orderId": uuidv1(),
       "quantity": quantity,
       "goods": goods,
-      "supplier": supplierId, 
+      "supplier": supplierId,
     }).then(function(response) {
        res.send('Successfully posted the makeOrder!');
     }).catch((error) => errorHandling(error));
@@ -149,7 +149,7 @@ app.get('/shipment/:id', function (req, res) {
 
 //Start for ShippingPartnerEndorseHandover
 app.post('/ShippingPartnerEndorseHandover', function(req,res) {
-  
+
   var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ShippingPartnerEndorseHandover',
@@ -165,7 +165,7 @@ app.post('/ShippingPartnerEndorseHandover', function(req,res) {
 
 //Start for ShippingPartnerDelivery
 app.post('/ShippingPartnerDelivery', function(req,res) {
-  
+
   var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ShippingPartnerDelivery',
@@ -182,7 +182,7 @@ app.post('/ShippingPartnerDelivery', function(req,res) {
 // Start for ConsumerEndorseDelivery
 
 app.post('/ConsumerEndorseDelivery', function(req,res) {
-  
+
   var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/ConsumerEndorseDelivery',
@@ -200,7 +200,7 @@ app.post('/ConsumerEndorseDelivery', function(req,res) {
 // Start for SupplierHandover
 
 app.post('/SupplierHandover', function(req,res) {
-  
+
   var input = req.body;
 
   axios.post(composerEndpoint + ':' + req.headers.port + '/api/SupplierHandover',
@@ -269,7 +269,6 @@ app.put('/goods/:id',function(req,res){
   axios.put(composerEndpoint + ':' + req.headers.port + '/api/Goods/' + req.params.id,
   {
     "$class": "org.onlineshopping.basic.Goods",
-    "goodsId": req.params.id,
     "supplier": "resource:org.onlineshopping.basic.Supplier#" + req.body.supplier,
     "name": req.body.name,
     "type": req.body.type,
@@ -287,7 +286,7 @@ app.delete('/goods/:id',function(req,res){
     res.send('')
   }).catch((error) => errorHandling(error));
 })
-  
+
 //
 app.post('/importGoods',function(req,res){
   var input = req.body;
