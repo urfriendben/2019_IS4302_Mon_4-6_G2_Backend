@@ -51,25 +51,27 @@ app.post('/login', async function (req, res) {
 
 app.get('/goods', function (req, res) {
   // Promise to get goods
+  console.log("reached")
+  console.log(composerEndpoint + ':' + req.headers.port + '/api/Goods')
   axios.get(composerEndpoint + ':' + req.headers.port + '/api/Goods') //NOTE: e.g. port 3000 in postman
   .then(function(response) {
     res.json({data: response.data});
   }).catch((error) => errorHandling(error));
 });
 
-app.post('/order/:id', function (req, res) {
+app.get('/order/:id', function (req, res) {
   // Promise to get goods
   axios.all([
-      axios.post(composerEndpoint + '/api/ViewOrder',
+      axios.post(composerEndpoint + ':' + req.headers.port + '/api/ViewOrder',
       {
     "$class": "org.onlineshopping.basic.ViewOrder",
     "order": "resource:org.onlineshopping.basic.Order#" + req.params.id
       }),
-      axios.get(composerEndpoint + '/api/Order/' + req.params.id)
+      axios.get(composerEndpoint + ':' + req.headers.port + '/api/Order/' + req.params.id)
 ]).then(axios.spread(function (response, response2) {
     // res.send("check");
-    console.log(response.data)
-    console.log(response2.data)
+    
+    
     var data = response.data;
     var data2 = response2.data;
     res.send({
