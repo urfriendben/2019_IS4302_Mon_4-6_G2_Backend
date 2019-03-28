@@ -246,6 +246,45 @@ function errorHandling(error){
     //res.send('')
   //}).catch((error) => errorHandling(error));
 //});
+
+app.post('/goods',function(req,res){
+  axios.post(composerEndpoint + ':' + req.headers.port + '/api/Goods',
+  {
+    "$class": "org.onlineshopping.basic.Goods",
+    "goodsId": req.body.id,
+    "supplier": "resource:org.onlineshopping.basic.Supplier#" + req.body.supplier,
+    "name": req.body.name,
+    "type": req.body.type,
+    "quantity": req.body.quantity,
+    "price": req.body.price
+  })
+  .then(function(response){
+    res.send('')
+  }).catch((error) => errorHandling(error));
+})
+
+app.put('/goods/:id',function(req,res){
+  axios.put(composerEndpoint + ':' + req.headers.port + '/api/Goods/' + req.params.id,
+  {
+    "$class": "org.onlineshopping.basic.Goods",
+    "goodsId": req.params.id,
+    "supplier": "resource:org.onlineshopping.basic.Supplier#" + req.body.supplier,
+    "name": req.body.name,
+    "type": req.body.type,
+    "quantity": req.body.quantity,
+    "price": req.body.price
+  })
+  .then(function(response){
+    res.send('')
+  }).catch((error) => errorHandling(error));
+})
+
+app.delete('/goods/:id',function(req,res){
+  axios.delete(composerEndpoint + ':' + req.headers.port + '/api/Goods/' + req.params.id)
+  .then(function(response){
+    res.send('')
+  }).catch((error) => errorHandling(error));
+})
   
 //
 app.post('/importGoods',function(req,res){
