@@ -121,7 +121,7 @@ app.post('/makeOrder', function(req, res) {
       "goods": goods,
       "supplier": supplierId,
     }).then(function(response) {
-       res.send('Successfully posted the makeOrder!');
+       res.send(response.orderId);
     }).catch((error) => errorHandling(error));
   });
 })
