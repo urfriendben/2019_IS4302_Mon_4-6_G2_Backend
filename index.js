@@ -110,9 +110,8 @@ app.post('/makeOrder', function(req, res) {
   Object.keys(input).map(supplierId => {
     var goods = [];
     var quantity = [];
-    let goodPrefix = "resource:org.onlineshopping.basic.Goods#";
     Object.keys(input[supplierId]).map(productId => {
-      goods.push(goodPrefix + productId);
+      goods.push(productId);
       quantity.push(input[supplierId][productId].quantity);
     })
     axios.post(composerEndpoint + ':' + req.headers.port + '/api/MakeOrder', {
