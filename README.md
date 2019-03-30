@@ -33,10 +33,10 @@ After you are done setting up. You can follow the test flow crafted for you to t
 
 1. Log in as a Supplier , create new goods object.
 2. Go to Consumer webpage, make an order on the newly created goods object. (Consumer should note down the orderId that is displayed for future reference. Ideally, this would be emailed to the relevant party.)
-3. Go to Supplier webpage, carry out SupplierHandover transaction. Show them that it is endorsed by showing them the corresponding chaincode if need to.
-4. Log in as Shipping Partner, carry out Shipping Partner Endorse Handover transaction. Point out to them that the status has changed to inTransit, after Shipping partner endorse. (At this point, the goods are handover to the Shipping Partner, and they are liable for any damage to the goods.)
+3. Go to Supplier webpage, carry out SupplierHandover transaction. 
+4. Log in as Shipping Partner, carry out Shipping Partner Endorse Handover transaction. Status has changed to inTransit, after Shipping partner endorse. (At this point, the goods are handover to the Shipping Partner, and they are liable for any damage to the goods.)
 5. Continue from Shipping partner webpage, carry out Endorse Delivery transaction. 
-6. Go to Consumer webpage, carry out Endorse Delivery transaction. (At this point, goods is delivered to the consumer. Shipping Partner can no longer be held responsible. Consumer should check for damaged goods before endorsing delivery.) Based on our implementation, point out to them that the Order status is changed to delivered.  
+6. Go to Consumer webpage, carry out Endorse Delivery transaction. (At this point, goods is delivered to the consumer. Shipping Partner can no longer be held responsible. Consumer should check for damaged goods before endorsing delivery.) 
 
 ## Enquires
 For any enquires or problem faced when deploying please contact Ng Zi Liang at e0176934@u.nus.edu 
