@@ -29,7 +29,7 @@ Server runs at port `8010`
 Test via `Postman`
 
 ## Test Flow
-After you are done setting up. You can follow the test flow crafted for you to test out the entire functionailities that are provided.
+After you are done setting up. You can follow the test flow crafted for you to test out the entire functionailities that are provided. Note it is recommended that you use Incognito mode in google Chrome to do the testing to avoid caching issue. 
 
 1. Log in as a Supplier , create new goods object.
 2. Go to Consumer webpage, make an order on the newly created goods object. (Consumer should note down the orderId that is displayed for future reference. Ideally, this would be emailed to the relevant party.)
