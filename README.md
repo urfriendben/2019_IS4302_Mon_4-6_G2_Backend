@@ -18,7 +18,7 @@ Backend:
 http://52.15.98.17:8010
 
 Playground:
-http://52.15.98.17:8080
+Please refer to slide 5 of Final Presentation Slides
 
 If you prefer to run this project locally, please do these:
 
